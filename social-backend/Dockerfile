@@ -1,5 +1,7 @@
 FROM node:11.6.0-alpine
-# ADD ./app /code
 WORKDIR /code
+COPY ./app/ /code/
 RUN npm install
-RUN npm start
+# RUN npm run server
+# CMD ["npm run server"]
+CMD ["node", "./src/server.js"]
