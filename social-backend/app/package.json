@@ -5,7 +5,7 @@
 	"main": "server.js",
 	"scripts":{
 		"start": "node ./src/server.js",
-		"server": "nodemon -L ./src/server.js"
+		"server": "node ./node_modules/nodemon/bin/nodemon -L ./src/server.js"
 	},
 	"dependencies":{
 		"express":"^4.16.4",
