@@ -9,5 +9,6 @@ services:
     volumes: 
       - ./app/:/code/ 
       - /code/node_modules/ 
+    working_dir: /code
 volumes:
     app:
