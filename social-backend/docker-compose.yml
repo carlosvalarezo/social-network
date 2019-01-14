@@ -1,16 +1,13 @@
 version: '3'
 services:
-  social-backend: 
-    build: 
+  social-backend:
+    build:
       context: .
       dockerfile: ./dockerfiles/social-backend/Dockerfile
-    command: node ./src/server.js
     ports:
       - "5000:5000"
-    volumes:
-      - ./app/:/code/
-      - /code/src/
-      - /code/node_modules/
-    working_dir: /code/
+    volumes: 
+      - ./app/:/code/ 
+      - /code/node_modules/ 
 volumes:
     app:
