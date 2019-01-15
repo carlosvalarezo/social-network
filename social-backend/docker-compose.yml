@@ -1,6 +1,7 @@
 version: '3'
 services:
   social-backend:
+    container_name: "social-backend"
     build:
       context: .
       dockerfile: ./dockerfiles/social-backend/Dockerfile
@@ -9,6 +10,15 @@ services:
     volumes: 
       - ./app/:/code/ 
       - /code/node_modules/ 
-    working_dir: /code
+    working_dir: /code/
+    depends_on:
+      - mongo
+  mongo:
+    container_name: social-db
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+    - ./social-data/:/data/db/
 volumes:
     app:
