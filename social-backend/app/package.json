@@ -15,7 +15,8 @@
 		"jsonwebtoken": "^8.4.0",
 		"body-parser": "^1.18.3",
 		"bcryptjs": "^2.4.3",
-		"validator": "^10.10.0"
+		"validator": "^10.10.0",
+		"gravatar": "^1.8.0"
 	},
 	"devDependencies": {
 		"nodemon": "^1.18.9"
