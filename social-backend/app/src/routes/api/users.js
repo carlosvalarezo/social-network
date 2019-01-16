@@ -41,4 +41,29 @@ router.post('/register', (request, response) => {
         .catch((error) => console.log('error inserting...', error));
 });
 
+router.post('/login', (request, response) => {
+    const email = request.body.email;
+    const password = request.body.password;
+
+    //fin de user by email
+    User.findOne({email})
+        .then(user => {
+            //check for user
+            if(!user){
+                return response.status(400).json({message: 'email not found'});
+            }
+
+            //check password
+            bcrypt.compare(password, user.password)
+                  .then(isMatch => {
+                      if(isMatch){
+                          response.json({message: 'success'});
+                      }
+                      else {
+                          return response.status(400).json({password: 'password incorrect'});
+                      }
+                  });
+        })
+});
+
 module.exports = router;
