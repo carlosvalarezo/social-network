@@ -1,4 +1,5 @@
 FROM node:11.6.0-alpine
-ADD ./app/ /code
+ADD ./app/ /code/
+WORKDIR /code/
 RUN npm install
 CMD ["npm", "run", "server"]
