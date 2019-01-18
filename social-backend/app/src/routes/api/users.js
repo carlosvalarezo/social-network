@@ -17,13 +17,13 @@ router.post('/register', (request, response) => {
             if(user) {
                 return response.status(400).json({email: 'email already exists'});
             }
-            else{
+            else {
                 const name = request.body.name;
                 const password = request.body.password;
                 const avatar = gravatar.url(email,
                     {s: '200',
-                     r: 'pg',
-                     d: 'mm'});
+                        r: 'pg',
+                        d: 'mm'});
                 const newUser = new User({
                     name, 
                     email,
@@ -32,11 +32,11 @@ router.post('/register', (request, response) => {
                 });
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (error, hash) => {
-                        if(error) throw err;
+                        if(error){response.status(400).json({error}) } 
                         newUser.password = hash;
                         newUser.save()
-                               .then(user => response.json(user))
-                               .catch(error => console.log(error));
+                                .then(user => response.status(200).json({email: 'registered'}))
+                                .catch(error => console.log(error));
                     })
                 });
             }
@@ -80,7 +80,7 @@ router.post('/login', (request, response) => {
         })
 });
 
-router.get('/current', passport.authenticate('jwt', {session:false}), (request, response, next) => {
+router.get('/current', passport.authenticate('jwt', {session:false}), (request, response) => {
     response.json({message: 'success'}); 
 });
 
