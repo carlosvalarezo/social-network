@@ -6,54 +6,72 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../../config/keys');
 const passport  = require('passport');
 
+const validateRegisterInput = require('../../../validation/register');
+const validateLoginInput = require('../../../validation/login');
+
 const User = require('../../../models/User');
 
 router.get('/test', (request, response) => response.json({message: 'users success'}));
 
 router.post('/register', (request, response) => {
+    const { errors, isValid } = validateRegisterInput(request.body);
+
+    if(!isValid){
+        return response.status(400).json(errors);
+    }
+
     const email = request.body.email;
     User.findOne({ email })
         .then(user => {
             if(user) {
-                return response.status(400).json({email: 'email already exists'});
+                errors.email = 'email already exists';
+                return response.status(400).json(errors);
             }
-            else {
-                const name = request.body.name;
-                const password = request.body.password;
-                const avatar = gravatar.url(email,
-                    {s: '200',
-                        r: 'pg',
-                        d: 'mm'});
-                const newUser = new User({
-                    name, 
-                    email,
-                    avatar,
-                    password, 
-                });
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(newUser.password, salt, (error, hash) => {
-                        if(error){response.status(400).json({error}) } 
-                        newUser.password = hash;
-                        newUser.save()
-                                .then(user => response.status(200).json({email: 'registered'}))
-                                .catch(error => console.log(error));
-                    })
-                });
-            }
+            const name = request.body.name;
+            const password = request.body.password;
+            const avatar = gravatar.url(email,
+                {s: '200',
+                    r: 'pg',
+                    d: 'mm'});
+            const newUser = new User({
+                name, 
+                email,
+                avatar,
+                password, 
+            });
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (error, hash) => {
+                    if(error){response.status(400).json({error}) } 
+                    newUser.password = hash;
+                    newUser.save()
+                            .then(user => response.status(200).json({message: 'users registered succesfully'}))
+                            .catch(error => console.log(error));
+                })
+            });
         })
         .catch((error) => console.log('error inserting...', error));
 });
 
 router.post('/login', (request, response) => {
+
+    const { errors, isValid } = validateLoginInput(request.body);
+
+    if(!isValid){
+        return response.status(400).json(errors);
+    }
+
     const email = request.body.email;
     const password = request.body.password;
+
+    
 
     //fin de user by email
     User.findOne({email})
         .then(user => {
             //check for user
             if(!user){
-                return response.status(400).json({message: 'email not found'});
+                errors.email = 'email not found';
+                return response.status(400).json(errors);
             }
 
             //check password
@@ -74,7 +92,8 @@ router.post('/login', (request, response) => {
                         });
                       }
                       else {
-                          return response.status(400).json({password: 'password incorrect'});
+                          errors.password = 'password incorrect';
+                          return response.status(400).json(errors);
                       }
                   });
         })
