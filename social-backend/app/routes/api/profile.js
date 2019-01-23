@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 //Load validation
-const validateProfileInput = require('../../validation/profile')
+const validateProfileInput = require('../../validation/profile');
+const validateExperienceInput = require('../../validation/experience');
 
 //Load profile
 const Profile = require('../../models/Profile');
@@ -132,5 +133,29 @@ router.post('/', passport.authenticate('jwt', { session: false }), (request, res
                       });
             }
         });
+});
+
+router.post('/experience', passport.authenticate('jwt', {session:false}), (request, response) => {
+    const { errors, isValid } = validateExperienceInput(request.body);
+    if(!isValid) {
+        return response.status(400).json(errors);
+    }
+
+    Profile.findOne({user: request.user.id})
+          .then(profile => {
+              const newExperience = {
+                  title: request.body.title,
+                  company: request.body.company,
+                  location: request.body.location,
+                  from: request.body.from,
+                  to: request.body.to,
+                  current: request.body.current,
+                  description: request.body.description
+              }
+          });
+
+          profile.experience.unshift(newExperience);
+
+          profile.save().then(profile => response.json(profile));
 });
 module.exports = router;
