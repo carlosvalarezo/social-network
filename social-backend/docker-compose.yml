@@ -16,8 +16,8 @@ services:
     environment:
       WAIT_HOSTS: mongo:27017
   mongo:
-    container_name: social-db
     image: mongo:latest
+    container_name: social-db    
     ports:
       - "27017:27017"
     volumes:

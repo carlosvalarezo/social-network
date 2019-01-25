@@ -25,14 +25,11 @@ router.post('/register', (request, response) => {
     console.log({email});
     User.findOne({ email })
         .then(user => {
-            console.log('en la promesa de findone');
             if (user) {
-                console.log('email already exists');
                 errors.email = 'email already exists';
                 return response.status(400).json(errors);
             }
             else{
-                console.log("en el else")
                 const name = request.body.name;
                 const password = request.body.password;
                 const avatar = gravatar.url(email,

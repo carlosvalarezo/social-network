@@ -6,6 +6,7 @@ const passport = require('passport');
 //Load validation
 const validateProfileInput = require('../../validation/profile');
 const validateExperienceInput = require('../../validation/experience');
+const validateEducationInput = require('../../validation/education');
 
 //Load profile
 const Profile = require('../../models/Profile');
@@ -144,7 +145,7 @@ router.post('/experience', passport.authenticate('jwt', {session:false}), (reque
     Profile.findOne({user: request.user.id})
           .then(profile => {
               const newExperience = {
-                  title: request.body.title,
+                  school: request.body.school,
                   company: request.body.company,
                   location: request.body.location,
                   from: request.body.from,
@@ -152,10 +153,33 @@ router.post('/experience', passport.authenticate('jwt', {session:false}), (reque
                   current: request.body.current,
                   description: request.body.description
               }
-          });
+              profile.experience.unshift(newExperience);
 
-          profile.experience.unshift(newExperience);
-
-          profile.save().then(profile => response.json(profile));
+              profile.save().then(profile => response.json(profile));
+          });          
 });
+
+router.post('/education', passport.authenticate('jwt', {session:false}), (request, response) => {
+    const { errors, isValid } = validateEducationInput(request.body);
+    if(!isValid) {
+        return response.status(400).json(errors);
+    }
+
+    Profile.findOne({user: request.user.id})
+          .then(profile => {
+              const newEducation = {
+                  school: request.body.school,
+                  degree: request.body.degree,
+                  fieldOfStudy: request.body.fieldOfStudy,
+                  from: request.body.from,
+                  to: request.body.to,
+                  current: request.body.current,
+                  description: request.body.description
+              }
+              profile.education.unshift(newEducation);
+
+              profile.save().then(profile => response.json(profile));
+          });          
+});
+
 module.exports = router;
