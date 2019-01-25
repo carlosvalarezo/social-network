@@ -15,41 +15,48 @@ router.get('/test', (request, response) => response.json({ message: 'users succe
 
 router.post('/register', (request, response) => {
     const { errors, isValid } = validateRegisterInput(request.body);
+    console.log({errors, isValid})
 
     if (!isValid) {
         return response.status(400).json(errors);
     }
 
     const email = request.body.email;
+    console.log({email});
     User.findOne({ email })
         .then(user => {
+            console.log('en la promesa de findone');
             if (user) {
+                console.log('email already exists');
                 errors.email = 'email already exists';
                 return response.status(400).json(errors);
             }
-            const name = request.body.name;
-            const password = request.body.password;
-            const avatar = gravatar.url(email,
-                {
-                    s: '200',
-                    r: 'pg',
-                    d: 'mm'
+            else{
+                console.log("en el else")
+                const name = request.body.name;
+                const password = request.body.password;
+                const avatar = gravatar.url(email,
+                    {
+                        s: '200',
+                        r: 'pg',
+                        d: 'mm'
+                    });
+                const newUser = new User({
+                    name,
+                    email,
+                    avatar,
+                    password,
                 });
-            const newUser = new User({
-                name,
-                email,
-                avatar,
-                password,
-            });
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(newUser.password, salt, (error, hash) => {
-                    if (error) { response.status(400).json({ error }) }
-                    newUser.password = hash;
-                    newUser.save()
-                        .then(user => response.status(200).json({ message: 'users registered succesfully' }))
-                        .catch(error => console.log(error));
-                })
-            });
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newUser.password, salt, (error, hash) => {
+                        if (error) { return response.status(400).json({ error }) }
+                        newUser.password = hash;
+                        newUser.save()
+                            .then(user => response.status(200).json({ message: 'users registered succesfully' }))
+                            .catch(error => console.log(error));
+                    })
+                });
+            }
         })
         .catch((error) => console.log('error inserting...', error));
 });
@@ -61,7 +68,7 @@ router.post('/login', (request, response) => {
     if (!isValid) {
         return response.status(400).json(errors);
     }
-
+    
     const email = request.body.email;
     const password = request.body.password;
 

@@ -34,7 +34,6 @@ module.exports = function validateRegisterInput(data) {
     }
 
     if (!Validator.equals(data.password, data.password2)) {
-
         errors.password2 = 'passwords must match, ' + data.password + '-' + data.password2;
     }
 
