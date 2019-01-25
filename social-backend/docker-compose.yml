@@ -13,8 +13,6 @@ services:
       - /code/node_modules/
     depends_on:
       - mongo
-    environment:
-      WAIT_HOSTS: mongo:27017
   mongo:
     image: mongo:latest
     container_name: social-db    
