@@ -182,4 +182,17 @@ router.post('/education', passport.authenticate('jwt', {session:false}), (reques
           });          
 });
 
+router.post('/experience/:exp_id', passport.authenticate('jwt', {session: false}), (request, response) => {
+    Profile.findOne({user:request.user.id})
+          .then(profile => {
+              const removeIndex = profile.experience
+                                  .map(item => item.id)
+                                  .indexOf(request.params.exp_id);
+            profile.experience.splice(removeIndex, 1);
+            profile.save()
+                  .then(profile => response.json(profile));
+          })
+          .catch(error => response.status(404).json(error));
+});
+
 module.exports = router;
