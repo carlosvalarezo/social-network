@@ -13,6 +13,7 @@ services:
       - /code/node_modules/
     depends_on:
       - mongo
+    command: npm run server
   mongo:
     image: mongo:latest
     container_name: social-db    
@@ -20,5 +21,8 @@ services:
       - "27017:27017"
     volumes:
     - ../social-data/:/data/db/
+    - ./app/scripts/:/scripts
+    healthcheck                                                               :
+      test: ./scripts/mongo_healthcheck.sh
 volumes:
-    app:
+  app:
