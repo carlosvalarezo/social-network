@@ -12,7 +12,7 @@ router.get('/', passport.authenticate('jwt', {session:false}), (request, respons
     Post.find()
         .sort({date: -1})
         .then(posts => response.json(posts))
-        .catch(error => response.status(404));
+        .catch(error => response.status(404).json({message: 'no posts found' }));
 });
 
 router.get('/:post_id', passport.authenticate('jwt', {session:false}), (request, response) => {
