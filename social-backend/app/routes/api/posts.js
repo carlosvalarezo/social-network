@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const Post = require('../../models/Post');
+const Profile = require('../../models/Profile');
+
 const validatePostInput = require('../../validation/post');
 
 router.get('/test', (request, response) => response.json({message: 'posts success'}));
@@ -37,6 +39,38 @@ router.post('/', passport.authenticate('jwt', {session: false}), (request, respo
     });
     newPost.save()
            .then(post => response.json(post));
+});
+
+router.post('/', passport.authenticate('jwt', {session: false}), (request, response) => {
+    const { errors, isValid } = validatePostInput(request.body);
+
+    if(!isValid){
+        return response.status(400).json(errors);
+    }
+
+    const newPost = new Post({
+        text: request.body.text,
+        name: request.body.name,
+        avatar: request.body.avatar,
+        user: request.user.id
+    });
+    newPost.save()
+           .then(post => response.json(post));
+});
+
+router.delete('/:post_id', passport.authenticate('jwt', {session: false}), (request, response) => {
+    Profile.findOne({user: request.user.id})
+          .then(profile => {
+                Post.findById(request.params.post_id)
+                    .then(post => {
+                        if(post.user.toString() !== request.user.id){
+                            response.status(401).json({message: 'user not authorised'});
+                        }
+                        post.remove()
+                            .then(() => response.json({success: true}));
+                    })
+                    .catch(error => response.status(404).json({message: 'post not found'}));
+          });
 });
 
 module.exports = router;
