@@ -8,6 +8,20 @@ const validatePostInput = require('../../validation/post');
 
 router.get('/test', (request, response) => response.json({message: 'posts success'}));
 
+router.get('/', passport.authenticate('jwt', {session:false}), (request, response) => {
+    Post.find()
+        .sort({date: -1})
+        .then(posts => response.json(posts))
+        .catch(error => response.status(404));
+});
+
+router.get('/:post_id', passport.authenticate('jwt', {session:false}), (request, response) => {
+    Post.findById(request.params.post_id)
+        .sort({date: -1})
+        .then(posts => response.json(posts))
+        .catch(error => response.status(404));
+});
+
 router.post('/', passport.authenticate('jwt', {session: false}), (request, response) => {
     const { errors, isValid } = validatePostInput(request.body);
 
