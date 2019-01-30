@@ -18,7 +18,8 @@ router.post('/', passport.authenticate('jwt', {session: false}), (request, respo
     const newPost = new Post({
         text: request.body.text,
         name: request.body.name,
-        avatar: request.body.avatar
+        avatar: request.body.avatar,
+        user: request.user.id
     });
     newPost.save()
            .then(post => response.json(post));
