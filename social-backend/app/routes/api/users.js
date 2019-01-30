@@ -22,7 +22,6 @@ router.post('/register', (request, response) => {
     }
 
     const email = request.body.email;
-    console.log({email});
     User.findOne({ email })
         .then(user => {
             if (user) {
