@@ -41,23 +41,6 @@ router.post('/', passport.authenticate('jwt', {session: false}), (request, respo
            .then(post => response.json(post));
 });
 
-router.post('/', passport.authenticate('jwt', {session: false}), (request, response) => {
-    const { errors, isValid } = validatePostInput(request.body);
-
-    if(!isValid){
-        return response.status(400).json(errors);
-    }
-
-    const newPost = new Post({
-        text: request.body.text,
-        name: request.body.name,
-        avatar: request.body.avatar,
-        user: request.user.id
-    });
-    newPost.save()
-           .then(post => response.json(post));
-});
-
 router.delete('/:post_id', passport.authenticate('jwt', {session: false}), (request, response) => {
     Profile.findOne({user: request.user.id})
           .then(profile => {
