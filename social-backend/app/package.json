@@ -4,8 +4,11 @@
 	"description": "Social network for developers",
 	"main": "server.js",
 	"scripts": {
+		"client-install": "npm install --prefix social-frontend",
 		"start": "node ./server.js",
-		"server": "node ./node_modules/nodemon/bin/nodemon -L ./server.js"
+		"server": "node ./node_modules/nodemon/bin/nodemon -L ./server.js",
+		"client": "npm start --prefix social-frontend",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"dependencies": {
 		"express": "^4.16.4",
@@ -16,7 +19,8 @@
 		"body-parser": "^1.18.3",
 		"bcryptjs": "^2.4.3",
 		"validator": "^10.10.0",
-		"gravatar": "^1.8.0"
+		"gravatar": "^1.8.0",
+		"concurrently":"^4.1.0"
 	},
 	"devDependencies": {
 		"nodemon": "^1.18.9"

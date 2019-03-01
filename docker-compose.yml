@@ -1,16 +1,5 @@
 version: '2.1'
 services:
-  # social-frontend:
-  #   image: social-frontend
-  #   container_name: social-frontend
-  #   build:
-  #     context: .
-  #     dockerfile: ./dockerfiles/social-frontend/dockerfile
-  #   ports:
-  #     -3000:3000
-  #   volumes:
-
-
   social-backend:
     image: social-backend
     container_name: social-backend
@@ -25,6 +14,8 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+    healthcheck:
+      test: /code/scripts/backend_healthcheck.sh
     command: npm run server
   mongo:
     image: mongo
@@ -36,6 +27,17 @@ services:
     - ./scripts/mongo/mongo_healthcheck.sh:/code/scripts/mongo_healthcheck.sh
     healthcheck:
       test: /code/scripts/mongo_healthcheck.sh
+  social-frontend:
+    image: social-frontend
+    container_name: social-frontend
+    build:
+      context: .
+      dockerfile: ./dockerfiles/social-frontend/dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      social-backend:
+        condition: service_healthy
 volumes:
   social-backend:
   social-data:

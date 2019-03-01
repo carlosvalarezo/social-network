@@ -4,3 +4,4 @@ ADD ./social-backend/app/ /code/social-backend
 ADD ./scripts/ /code/scripts
 # RUN command executes on the container not locally
 RUN /code/scripts/project/setup_project.sh
+ENTRYPOINT [ "npm", "run", "client" ]

@@ -1,4 +1,4 @@
 FROM node:11.6.0-alpine
 WORKDIR /code/
-# ADD ../../../social-backend/app/ /code/
-# RUN ../../../scripts/project/setup_project.sh
+ADD ./social-frontend/ /code/
+ENTRYPOINT ["npm", "run", "start"]
