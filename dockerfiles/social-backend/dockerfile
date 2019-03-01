@@ -1,0 +1,6 @@
+FROM node:11.6.0-alpine
+WORKDIR /code/social-backend
+ADD ./social-backend/app/ /code/social-backend
+ADD ./scripts/ /code/scripts
+# RUN command executes on the container not locally
+RUN /code/scripts/project/setup_project.sh
