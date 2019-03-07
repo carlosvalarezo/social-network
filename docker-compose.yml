@@ -10,13 +10,13 @@ services:
       - 5000:5000
     volumes: 
       - ./social-backend/app/:/code/social-backend
+      - ./scripts/healthcheck/social-backend-healthcheck.sh:/code/scripts/social-backend-healthcheck.sh
       - /code/social-backend/node_modules/
     depends_on:
       mongo:
         condition: service_healthy
     healthcheck:
-      test: /code/scripts/backend_healthcheck.sh
-    command: npm run server
+      test: /code/scripts/social-backend-healthcheck.sh
   mongo:
     image: mongo
     container_name: social-db    

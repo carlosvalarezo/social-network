@@ -1,7 +1,11 @@
-FROM node:11.6.0-alpine
+# alpine does not include curl or apt-get tools needed to do healthchecks of containers
+# FROM node:11.6.0-alpine
+FROM node:11.10.1-stretch
+# the following line is to install jq in order to process the results from the curl request to the test endpoint
+RUN apt-get update && apt-get install jq -y
 WORKDIR /code/social-backend
 ADD ./social-backend/app/ /code/social-backend
 ADD ./scripts/ /code/scripts
-# RUN command executes on the container not locally
+# RUN command executes on the container not locally on the host
 RUN /code/scripts/project/setup_project.sh
-ENTRYPOINT [ "npm", "run", "client" ]
+ENTRYPOINT [ "npm", "run", "server" ]
