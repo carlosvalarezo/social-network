@@ -13,18 +13,18 @@ services:
       - ./scripts/healthcheck/social-backend-healthcheck.sh:/code/scripts/social-backend-healthcheck.sh
       - /code/social-backend/node_modules/
     depends_on:
-      mongo:
+      social-db:
         condition: service_healthy
     healthcheck:
       test: /code/scripts/social-backend-healthcheck.sh
-  mongo:
+  social-db:
     image: mongo
-    container_name: social-db    
+    container_name: social-db
     ports:
       - "27017:27017"
     volumes:
     - ./social-data/:/data/db/
-    - ./scripts/mongo/mongo_healthcheck.sh:/code/scripts/mongo_healthcheck.sh
+    - ./scripts/healthcheck/mongo_healthcheck.sh:/code/scripts/mongo_healthcheck.sh
     healthcheck:
       test: /code/scripts/mongo_healthcheck.sh
   social-frontend:
@@ -39,5 +39,6 @@ services:
       social-backend:
         condition: service_healthy
 volumes:
+  social-frontend:
   social-backend:
   social-data:
