@@ -5,7 +5,7 @@ FROM node:11.10.1-stretch
 RUN apt-get update && apt-get install jq -y
 WORKDIR /code/social-backend
 ADD ./social-backend/app/ /code/social-backend
-ADD ./scripts/project/setup_backend.sh /code/scripts/setup_backend.sh
+ADD ./scripts/setup/setup_backend.sh /code/scripts/setup_backend.sh
 # RUN command executes on the container not locally on the host
 RUN /code/scripts/setup_backend.sh
 ENTRYPOINT [ "npm", "run", "server" ]
