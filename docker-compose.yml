@@ -35,6 +35,9 @@ services:
       dockerfile: ./dockerfiles/social-frontend/dockerfile
     ports:
       - 3000:3000
+    volumes:
+    - ./social-frontend/:/code/
+    - /code/node_modules/
     depends_on:
       social-backend:
         condition: service_healthy

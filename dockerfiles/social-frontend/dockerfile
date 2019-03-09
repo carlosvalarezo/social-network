@@ -1,4 +1,4 @@
-FROM node:11.6.0-alpine
+FROM node:11.10.1-stretch
 WORKDIR /code/
 ADD ./social-frontend/ /code/
 ADD ./scripts/setup/setup_frontend.sh /code/scripts/setup_frontend.sh
