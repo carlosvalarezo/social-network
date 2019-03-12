@@ -4,4 +4,4 @@ ADD ./social-frontend/ /code/
 ADD ./scripts/setup/setup_frontend.sh /code/scripts/setup_frontend.sh
 # RUN command executes on the container not locally on the host
 RUN /code/scripts/setup_frontend.sh
-ENTRYPOINT ["npm", "run", "start"]
+ENTRYPOINT ["yarn", "run", "start"]
