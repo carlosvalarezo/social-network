@@ -13,7 +13,9 @@ const Profile = require('../../models/Profile');
 //Load user
 const User = require('../../models/User');
 
-router.get('/test', (request, response) => response.json({ message: 'profile success' }));
+router.get('/test', (request, response) => {
+    response.json({ message: 'profile success' })
+});
 
 router.get('/user/:user_id', passport.authenticate('jwt', { session: false }), (request, response) => {
     const errors = {}
