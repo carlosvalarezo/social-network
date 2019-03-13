@@ -27,8 +27,13 @@ onSubmit = (event) => {
         password2: this.state.password2
     }
     this.setState({errors: {}});
+
+    const address = process.env.URL;
+    const port = process.env.PORT;
+
+    const url = address + port;
     
-    axios.post('http://localhost:5000/api/users/register', newUser)
+    axios.post(url+'/api/users/register', newUser)
          .then(result => console.log(result.data))
          .catch(error => {this.setState({errors: error.response.data})});
 }

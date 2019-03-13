@@ -2,6 +2,8 @@ version: '2.1'
 services:
   social-backend:
     image: social-backend
+    env_file:
+     - ./social-backend/.env
     container_name: social-backend
     build:
       context: .
@@ -17,6 +19,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: /code/scripts/social-backend-healthcheck.sh
+    environment: 
+      - PORT=${BACKEND_PORT}
+      - ADDRESS=${BACKEND_ADDRESS}
   social-db:
     image: mongo
     container_name: social-db
@@ -29,6 +34,8 @@ services:
       test: /code/scripts/mongo_healthcheck.sh
   social-frontend:
     image: social-frontend
+    env_file:
+     - ./social-frontend/.env
     container_name: social-frontend
     build:
       context: .
@@ -41,6 +48,9 @@ services:
     depends_on:
       social-backend:
         condition: service_healthy
+    environment: 
+      - PORT=${FRONTEND_PORT}
+      - ADDRESS=${FRONTEND_ADDRESS}
 volumes:
   social-frontend:
   social-backend:
