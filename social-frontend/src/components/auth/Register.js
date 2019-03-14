@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
+import { registerUser } from '../../redux/actions/authorizationActions';
 
 class Register extends Component {
   constructor(){
@@ -32,10 +34,12 @@ onSubmit = (event) => {
     const port = process.env.PORT;
 
     const url = address + port;
+
+    this.props.registerUser(newUser);
     
-    axios.post(url+'/api/users/register', newUser)
-         .then(result => console.log(result.data))
-         .catch(error => {this.setState({errors: error.response.data})});
+    // axios.post(url+'/api/users/register', newUser)
+    //      .then(result => console.log(result.data))
+    //      .catch(error => {this.setState({errors: error.response.data})});
 }
 
   render() {
@@ -75,4 +79,4 @@ onSubmit = (event) => {
   }
 }
 
-export default Register;
+export default connect(null, { registerUser })(Register);
