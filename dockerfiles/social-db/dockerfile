@@ -1,0 +1,7 @@
+FROM mongo
+
+WORKDIR /code/
+
+ADD ./scripts/healthcheck/mongo_healthcheck.sh /code/scripts/mongo_healthcheck.sh
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "sh", "/code/scripts/mongo_healthcheck.sh" ]

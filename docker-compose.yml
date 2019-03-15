@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3'
 services:
   social-backend:
     image: social-backend
@@ -15,20 +15,23 @@ services:
       - ./scripts/healthcheck/social-backend-healthcheck.sh:/code/scripts/social-backend-healthcheck.sh
       - /code/social-backend/node_modules/
     depends_on:
-      social-db:
-        condition: service_healthy
-    healthcheck:
-      test: /code/scripts/social-backend-healthcheck.sh
+      - social-db
+        # condition: service_healthy
+    # healthcheck:
+    #   test: /code/scripts/social-backend-healthcheck.sh
   social-db:
-    image: mongo
+    image: social-db
     container_name: social-db
+    build:
+      context: .
+      dockerfile: ./dockerfiles/social-db/dockerfile
     ports:
       - "27017:27017"
     volumes:
     - ./social-data/:/data/db/
-    - ./scripts/healthcheck/mongo_healthcheck.sh:/code/scripts/mongo_healthcheck.sh
-    healthcheck:
-      test: /code/scripts/mongo_healthcheck.sh
+    # - ./scripts/healthcheck/mongo_healthcheck.sh:/code/scripts/mongo_healthcheck.sh
+    # healthcheck:
+    #   test: /code/scripts/mongo_healthcheck.sh
   social-frontend:
     image: social-frontend
     env_file:
@@ -43,8 +46,8 @@ services:
     - ./social-frontend/:/code/
     - /code/node_modules/
     depends_on:
-      social-backend:
-        condition: service_healthy
+      - social-backend
+        # condition: service_healthy
     # Use environment label only when we need to get env variables from the host shell, maybe secrets
     # environment: 
     #   - PORT=${PORT}

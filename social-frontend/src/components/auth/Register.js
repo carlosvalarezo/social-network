@@ -35,7 +35,7 @@ onSubmit = (event) => {
 
     const url = address + port;
 
-    this.props.registerUser(newUser);
+    this.props.registerUser(newUser, {test:'el-dato'});
     
     // axios.post(url+'/api/users/register', newUser)
     //      .then(result => console.log(result.data))
