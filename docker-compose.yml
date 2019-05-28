@@ -1,15 +1,13 @@
-version: '3'
+version: '3.7'
 services:
   social-backend:
     image: social-backend
-    env_file:
-     - ./social-backend/.env
     container_name: social-backend
     build:
       context: .
       dockerfile: ./dockerfiles/social-backend/dockerfile
     ports:
-      - 5000:5000
+      - ${BACKENDPORT}:${BACKENDPORT}
     volumes: 
       - ./social-backend/app/:/code/social-backend
       - ./scripts/healthcheck/social-backend-healthcheck.sh:/code/scripts/social-backend-healthcheck.sh
@@ -23,19 +21,17 @@ services:
       context: .
       dockerfile: ./dockerfiles/social-db/dockerfile
     ports:
-      - "27017:27017"
+      - ${DBPORT}:${DBPORT}
     volumes:
     - ./social-data/:/data/db/
   social-frontend:
     image: social-frontend
-    env_file:
-     - ./social-frontend/.env
     container_name: social-frontend
     build:
       context: .
       dockerfile: ./dockerfiles/social-frontend/dockerfile
     ports:
-      - 3000:3000
+      - ${FRONTENDPORT}:${FRONTENDPORT}
     volumes:
     - ./social-frontend/:/code/
     - /code/node_modules/
